@@ -55,6 +55,8 @@ android {
 
             buildConfigField("String", "BASE_URL", "\"https://api.adviceslip.com/\"")
 
+            buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
+
             buildConfigField("String","BASE_URL_LOCAL", "\"http://10.0.2.2:8081/\"")
 
             resValue("string", "app_name", "Assistant Virtual (DEV)")
@@ -109,9 +111,10 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1") //DataStore
     implementation(libs.hilt.android)                               // Implementación de Hilt
     implementation(libs.hilt.navigation.compose)
-    implementation(libs.androidx.room.ktx)                    // Integración con Jetpack Compose
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.compose.ui.text)                    // Integración con Jetpack Compose
     ksp(libs.hilt.compiler)                                         // KSP
-
+    implementation("org.videolan.android:libvlc-all:3.6.0") //video
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.compose.runtime)
