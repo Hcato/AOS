@@ -2,6 +2,7 @@ package com.hcato.hakai.core.di
 
 import android.content.Context
 import android.provider.Settings
+import com.hcato.hakai.BuildConfig
 import com.hcato.hakai.feature.principal.data.datasource.remote.api.StreamingApi
 import dagger.Module
 import dagger.Provides
@@ -12,13 +13,12 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-    private const val BASE_URL = "http://44.193.188.243:3000"
 
     @Provides
     @Singleton
@@ -31,13 +31,13 @@ object NetworkModule {
             .setReconnection(true)
             .build()
 
-        return IO.socket(BASE_URL, options)
+        return IO.socket(BuildConfig.BASE_URL, options)
     }
 
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -45,4 +45,10 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): StreamingApi =
         retrofit.create(StreamingApi::class.java)
+    @Provides
+    @Named("androidId")
+    @Singleton
+    fun provideAndroidId(@ApplicationContext context: Context): String {
+        return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    }
 }

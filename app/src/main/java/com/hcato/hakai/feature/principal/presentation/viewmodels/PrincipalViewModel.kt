@@ -3,6 +3,7 @@ package com.hcato.hakai.feature.principal.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hcato.hakai.BuildConfig
+import com.hcato.hakai.feature.principal.data.datasource.remote.api.PrincipalRepository
 import com.hcato.hakai.feature.principal.presentation.screens.PrincipalUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -20,7 +21,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 @HiltViewModel
-class PrincipalViewModel @Inject constructor() : ViewModel() {
+class PrincipalViewModel @Inject constructor(
+    private val repository: PrincipalRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(PrincipalUiState())
     val state = _state.asStateFlow()
@@ -36,38 +39,17 @@ class PrincipalViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun startStreamingCheck() {
-        // Cancelamos cualquier job previo por seguridad
         pollingJob?.cancel()
-
         pollingJob = viewModelScope.launch {
-            // Este bucle se ejecutará mientras el ViewModel esté vivo
             while (isActive) {
-                val isAvailable = checkUrl()
-
+                // El ViewModel ahora es un "coordinador", no un "trabajador"
+                val isAvailable = repository.isStreamAvailable()
                 _state.update { it.copy(isVideoAvailable = isAvailable) }
-
-                // Si ya encontramos el directo, podríamos detener el polling
-                // o seguir preguntando por si se cae.
-                // Aquí esperamos 10 segundos antes de la siguiente consulta.
                 delay(10000)
             }
         }
     }
 
-    private suspend fun checkUrl(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val url = URL(streamUrl)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "HEAD"
-            connection.connectTimeout = 3000
-            connection.readTimeout = 3000
-
-            val responseCode = connection.responseCode
-            responseCode == HttpURLConnection.HTTP_OK
-        } catch (e: Exception) {
-            false
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()

@@ -58,7 +58,7 @@ import org.videolan.libvlc.util.VLCVideoLayout
 @Composable
 fun VideoScreen(
     viewModel: VideoViewModel = hiltViewModel(),
-    videoId: String = "estreno_principal", // Puedes recibir esto desde la NavArgs
+    videoId: String = "estreno_principal",
     onClickBack: () -> Unit
 ) {
     val context = LocalContext.current

@@ -53,11 +53,9 @@ android {
             dimension = "environment"
             applicationIdSuffix = ".dev"
 
-            buildConfigField("String", "BASE_URL", "\"https://api.adviceslip.com/\"")
+            buildConfigField("String", "BASE_URL", "\"http://44.193.188.243:3000/\"")
 
             buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
-
-            buildConfigField("String","BASE_URL_LOCAL", "\"http://10.0.2.2:8081/\"")
 
             resValue("string", "app_name", "Assistant Virtual (DEV)")
         }
@@ -65,11 +63,9 @@ android {
         create("prod") {
             dimension = "environment"
 
-            buildConfigField("String", "BASE_URL", "\"https://api.adviceslip.com/\"")
+            buildConfigField("String", "BASE_URL", "\"http://44.193.188.243:3000/\"")
 
             buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
-
-            buildConfigField("String","BASE_URL_LOCAL", "\"http://10.0.2.2:8081/\"")
 
             resValue("string", "app_name", "AOS"
             )
