@@ -7,4 +7,6 @@ object Principal
 @Serializable
 object Home
 @Serializable
-object Video
+data class Video(
+    val id: String
+)

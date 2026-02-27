@@ -53,11 +53,9 @@ android {
             dimension = "environment"
             applicationIdSuffix = ".dev"
 
-            buildConfigField("String", "BASE_URL", "\"https://api.adviceslip.com/\"")
+            buildConfigField("String", "BASE_URL", "\"http://44.193.188.243:3000/\"")
 
             buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
-
-            buildConfigField("String","BASE_URL_LOCAL", "\"http://10.0.2.2:8081/\"")
 
             resValue("string", "app_name", "Assistant Virtual (DEV)")
         }
@@ -65,11 +63,11 @@ android {
         create("prod") {
             dimension = "environment"
 
-            buildConfigField("String", "BASE_URL", "\"https://api.adviceslip.com/\"")
+            buildConfigField("String", "BASE_URL", "\"http://44.193.188.243:3000/\"")
 
-            buildConfigField("String","BASE_URL_LOCAL", "\"http://10.0.2.2:8081/\"")
+            buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
 
-            resValue("string", "app_name", "Assistant Virtual"
+            resValue("string", "app_name", "AOS"
             )
         }
     }
@@ -112,9 +110,11 @@ dependencies {
     implementation(libs.hilt.android)                               // Implementación de Hilt
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.compose.ui.text)                    // Integración con Jetpack Compose
+    implementation(libs.androidx.compose.ui.text)
+    implementation(libs.androidx.compose.foundation.layout)                    // Integración con Jetpack Compose
     ksp(libs.hilt.compiler)                                         // KSP
     implementation("org.videolan.android:libvlc-all:3.6.0") //video
+    implementation("io.socket:socket.io-client:2.1.0") //Socket
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.compose.runtime)

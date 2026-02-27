@@ -4,18 +4,23 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +58,7 @@ import org.videolan.libvlc.util.VLCVideoLayout
 @Composable
 fun VideoScreen(
     viewModel: VideoViewModel = hiltViewModel(),
+    videoId: String = "estreno_principal",
     onClickBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -61,15 +67,21 @@ fun VideoScreen(
     // Estado local para el loading del reproductor
     var isVideoLoading by remember { mutableStateOf(true) }
 
-    // 1. Manejo de Orientación e Insets
+    // --- 1. ACTIVACIÓN DE RED ---
+    // Al entrar a la pantalla, nos unimos al stream (Socket + Carga inicial de likes)
+    LaunchedEffect(Unit) {
+        viewModel.joinStream(videoId)
+    }
+
+    // 2. Manejo de Orientación
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 
-    // 2. Instancias de VLC persistentes
+    // 3. Instancias de VLC persistentes
     val libVLC = remember { LibVLC(context, arrayListOf("-vvv")) }
     val mediaPlayer = remember { MediaPlayer(libVLC) }
     val videoLayout = remember { VLCVideoLayout(context) }
 
-    // 3. Carga asíncrona y manejo de eventos
+    // 4. Carga asíncrona y manejo de eventos
     LaunchedEffect(uiState.videoUrl) {
         withContext(Dispatchers.IO) {
             val media = Media(libVLC, Uri.parse(uiState.videoUrl)).apply {
@@ -77,16 +89,13 @@ fun VideoScreen(
                 addOption(":clock-jitter=0")
                 setHWDecoderEnabled(true, false)
             }
-
             mediaPlayer.media = media
-
-            // Escuchar cuando el video realmente empieza a reproducirse
             mediaPlayer.setEventListener { event ->
                 if (event.type == MediaPlayer.Event.Playing) {
                     isVideoLoading = false
+                    viewModel.onVideoPlaying() // Sincroniza el estado del VM
                 }
             }
-
             withContext(Dispatchers.Main) {
                 mediaPlayer.attachViews(videoLayout, null, true, false)
                 mediaPlayer.play()
@@ -94,7 +103,7 @@ fun VideoScreen(
         }
     }
 
-    // 4. Limpieza al salir
+    // 5. Limpieza al salir
     DisposableEffect(Unit) {
         onDispose {
             mediaPlayer.stop()
@@ -104,9 +113,9 @@ fun VideoScreen(
         }
     }
 
-    // 5. Layout Final
+    // 6. Layout Final con Overlays
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-        // El reproductor
+        // El reproductor VLC
         AndroidView(
             factory = { videoLayout },
             modifier = Modifier.fillMaxSize()
@@ -117,22 +126,77 @@ fun VideoScreen(
             VideoLoadingScreen()
         }
 
-        // Overlay: Botón cerrar
-        IconButton(
-            onClick = onClickBack,
+        // --- OVERLAY SUPERIOR ---
+        Row(
             modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-                .background(Color.Black.copy(alpha = 0.4f), CircleShape)
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.Close, null, tint = Color.White)
+            IconButton(
+                onClick = onClickBack,
+                modifier = Modifier.background(Color.Black.copy(alpha = 0.4f), CircleShape)
+            ) {
+                Icon(Icons.Default.Close, null, tint = Color.White)
+            }
+
+            LiveBadge()
         }
 
-        // Overlay: Badge En Vivo
-        LiveBadge(
+        // --- OVERLAY INFERIOR (Interacción en tiempo real) ---
+        // Ponemos un degradado para que el texto sea legible siempre
+        Box(
             modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-        )
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .background(
+                    androidx.compose.ui.graphics.Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f))
+                    )
+                )
+                .padding(horizontal = 24.dp, vertical = 20.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Contador de Espectadores
+                Text(
+                    text = "👥 ${uiState.viewers}",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Botón de Like con contador
+                // Dentro de tu Row en VideoScreen
+                Button(
+                    onClick = { viewModel.sendLike(videoId) },
+                    // El botón se deshabilita si está enviando O si ya dio like
+                    enabled = !uiState.isLikeSending && !uiState.hasLiked,
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (uiState.hasLiked) Color.Gray else Color.Red.copy(alpha = 0.8f),
+                        disabledContainerColor = if (uiState.hasLiked) Color.Gray.copy(alpha = 0.5f) else Color.Red.copy(alpha = 0.4f)
+                    )
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = if (uiState.hasLiked) Icons.Default.Check else Icons.Default.Favorite,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "${uiState.totalLikes}",
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+            }
+        }
     }
 }
