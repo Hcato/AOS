@@ -12,11 +12,11 @@ fun LockScreenOrientation(orientation: Int) {
         val activity = context as? Activity ?: return@DisposableEffect onDispose {}
         val originalOrientation = activity.requestedOrientation
 
-        // Forzar la orientación deseada
+
         activity.requestedOrientation = orientation
 
         onDispose {
-            // Al salir de esta pantalla, restauramos la orientación original
+
             activity.requestedOrientation = originalOrientation
         }
     }

@@ -66,7 +66,7 @@ fun PrincipalScreen(
 
     Scaffold(
         bottomBar = {
-            Column(modifier = Modifier.background(Color(0xFF00080B)).padding(16.dp)) {
+            Column(modifier = Modifier.background(Color(0xFF00080B)).padding(50.dp)) {
                 ActionButton(
                     text = if (uiState.isVideoAvailable) "¡ESTRENO DISPONIBLE!" else "Esperando el estreno...",
                     onClick = { if (uiState.isVideoAvailable) onClickVideo() },
@@ -124,7 +124,7 @@ fun PrincipalScreen(
                     InfoColumn("Clasif.", "16+")
                 }
 
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(120.dp))
             }
 
             DetailsModal(showDetails, uiState.fullDescription) { showDetails = false }
