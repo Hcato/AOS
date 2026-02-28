@@ -76,7 +76,7 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             // Empujamos el contenido hacia abajo
-            Spacer(modifier = Modifier.fillMaxHeight(0.55f).aspectRatio(0.7f))
+            Spacer(modifier = Modifier.fillMaxHeight(0.55f).aspectRatio(0.75f))
 
             // 3. Información de la serie segmentada
             HomeSeriesInfo(
@@ -85,7 +85,7 @@ fun HomeScreen(
                 description = uiState.description
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             // 4. Botón de Acción
             ActionButton(
@@ -94,7 +94,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(120.dp))
         }
     }
 }
