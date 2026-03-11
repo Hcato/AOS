@@ -55,6 +55,8 @@ android {
 
             buildConfigField("String", "BASE_URL", "\"http://44.193.188.243:3000/\"")
 
+            buildConfigField("String", "AUTH_BASE_URL", "\"http://18.211.7.123:8000/\"") // <-- Nueva
+
             buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
 
             resValue("string", "app_name", "Assistant Virtual (DEV)")
