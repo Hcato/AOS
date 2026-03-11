@@ -12,7 +12,7 @@ class PrincipalNavGraph: FeatureNavGraph {
     override fun registerGraph(navGraphBuilder: NavGraphBuilder, navController: NavHostController) {
         navGraphBuilder.composable<Principal> {
             PrincipalScreen(
-                onClickVideo = { navController.navigate(Video) },
+                onClickVideo = { navController.navigate(Video(id = "EstrenoUnico")) },
                 onClickBack = { navController.popBackStack() }
             )
         }

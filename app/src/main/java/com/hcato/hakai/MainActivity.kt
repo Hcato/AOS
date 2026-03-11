@@ -16,7 +16,9 @@ import com.hcato.hakai.core.ui.theme.HakaiTheme
 import com.hcato.hakai.feature.home.navigation.HomeNavGraph
 import com.hcato.hakai.feature.principal.navigation.PrincipalNavGraph
 import com.hcato.hakai.feature.video.navigation.VideoNavGraph
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
