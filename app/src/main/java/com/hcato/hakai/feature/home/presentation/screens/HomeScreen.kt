@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -55,11 +56,18 @@ import com.hcato.hakai.feature.principal.presentation.components.LockScreenOrien
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onClickPrincipal: () -> Unit
+    onClickPrincipal: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     val uiState by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
+    LaunchedEffect(state.isLoggedOut) {
+        if (state.isLoggedOut) {
+            onNavigateToLogin()
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()

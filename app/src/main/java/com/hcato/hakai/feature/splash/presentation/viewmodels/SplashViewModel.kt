@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hcato.hakai.core.navigation.Home
 import com.hcato.hakai.core.navigation.LoginRoute
-import com.hcato.hakai.feature.login.domain.repositories.SessionRepository
+import com.hcato.hakai.core.repositories.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

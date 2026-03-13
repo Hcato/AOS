@@ -1,10 +1,10 @@
-package com.hcato.hakai.feature.login.data.local
+package com.hcato.hakai.feature.login.data.repositories
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.hcato.hakai.feature.login.domain.repositories.SessionRepository
+import com.hcato.hakai.core.repositories.SessionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

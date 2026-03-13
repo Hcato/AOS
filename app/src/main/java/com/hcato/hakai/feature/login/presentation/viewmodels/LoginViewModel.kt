@@ -2,7 +2,7 @@ package com.hcato.hakai.feature.login.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hcato.hakai.feature.login.domain.repositories.SessionRepository
+import com.hcato.hakai.core.repositories.SessionRepository
 import com.hcato.hakai.feature.login.domain.usecases.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

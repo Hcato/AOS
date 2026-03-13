@@ -6,5 +6,7 @@ data class HomeUiState(
     val tags: String = "16+ Sub • Supernatural, Action, Drama, Fantasy, Shounen",
     val releaseInfo: String = "Nuevos episodios los jueves a las 10:00 AM",
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val userEmail: String = "Cargando...",
+    val isLoggedOut: Boolean = false
 )

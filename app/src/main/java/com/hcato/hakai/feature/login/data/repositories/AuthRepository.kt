@@ -29,4 +29,20 @@ class AuthRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun getUserProfile(): Result<String> {
+        return try {
+            val response = api.getUserProfile()
+            if (response.isSuccessful) {
+                val email = response.body()?.email_del_usuario ?: "Usuario"
+                Result.success(email)
+            } else {
+                // Si es 401, el interceptor actuará antes de que este código termine,
+                // pero igual devolvemos failure por buena práctica.
+                Result.failure(Exception("Error al obtener perfil: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

@@ -2,6 +2,8 @@ package com.hcato.hakai.feature.home.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hcato.hakai.core.repositories.SessionRepository
+import com.hcato.hakai.core.repositories.UserRepository
 import com.hcato.hakai.feature.home.presentation.screens.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -12,7 +14,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    // Aquí irían tus UseCases si los necesitas para esta pantalla
+    private val userRepository: UserRepository, // Usamos la interfaz del Core
+    private val sessionRepository: SessionRepository // Usamos la interfaz del Core
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeUiState())
@@ -20,6 +23,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         loadContent()
+        loadUserProfile()
     }
 
     private fun loadContent() {
@@ -32,6 +36,27 @@ class HomeViewModel @Inject constructor(
                     isLoading = false
                 )
             }
+        }
+    }
+
+    private fun loadUserProfile() {
+        viewModelScope.launch {
+            val result = userRepository.getUserEmail()
+            result.onSuccess { email ->
+                _state.update { it.copy(userEmail = email) }
+            }.onFailure {
+                // Si la API dice que el token ya no sirve (ej. 401), cerramos sesión automáticamente
+                logout()
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            // Borramos el token "muerto" del DataStore
+            sessionRepository.clearSession()
+            // Le avisamos a la pantalla que nos tenemos que ir
+            _state.update { it.copy(isLoggedOut = true) }
         }
     }
 }
