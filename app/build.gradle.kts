@@ -59,6 +59,8 @@ android {
 
             buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
 
+            buildConfigField("String", "BASE_URL_STREAMING2", "\"http://18.206.107.28/Prueba_Miku_360part7_injected.mp4\"")
+
             resValue("string", "app_name", "Assistant Virtual (DEV)")
         }
 
@@ -68,6 +70,8 @@ android {
             buildConfigField("String", "BASE_URL", "\"http://44.193.188.243:3000/\"")
 
             buildConfigField("String", "BASE_URL_STREAMING", "\"http://18.210.61.62/hls/estreno-123.m3u8\"")
+
+            buildConfigField("String", "BASE_URL_STREAMING2", "\"http://18.206.107.28/Prueba_Miku_360part7_injected.mp4\"")
 
             resValue("string", "app_name", "AOS"
             )
@@ -102,6 +106,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")  // JSON
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-ui:1.2.0")
+
+    implementation("androidx.media3:media3-exoplayer-hls:1.2.0")
+
     implementation(libs.io.coil.kt.coil.compose)
     implementation(libs.androidx.navigation.compose)// Navigation
     implementation("io.github.sceneview:sceneview:2.2.1") //SceneView 3D
