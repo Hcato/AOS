@@ -102,7 +102,7 @@ fun HomeScreen(
 
                         // Elemento 2: Botón de Cerrar Sesión Manual
                         DropdownMenuItem(
-                            text = { Text("Cerrar Sesión", color = Color(0xFFFF6400)) },
+                            text = { Text("Cerrar Sesión", color = Color(0xFF00BCD4)) },
                             onClick = {
                                 expanded = false
                                 viewModel.logout() // Llamamos a la función de tu ViewModel

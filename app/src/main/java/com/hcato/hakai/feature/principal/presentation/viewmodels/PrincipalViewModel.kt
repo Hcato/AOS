@@ -19,10 +19,11 @@ import kotlinx.coroutines.withContext
 import org.videolan.libvlc.interfaces.IMedia.Meta.URL
 import java.net.HttpURLConnection
 import java.net.URL
-
+import com.hcato.hakai.core.hardware.FlashlightManager
 @HiltViewModel
 class PrincipalViewModel @Inject constructor(
-    private val repository: PrincipalRepository
+    private val repository: PrincipalRepository,
+    private val flashlightManager: FlashlightManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PrincipalUiState())
@@ -34,6 +35,8 @@ class PrincipalViewModel @Inject constructor(
     }
     private var pollingJob: Job? = null
 
+    private var wasVideoAvailable = false
+
     init {
         startStreamingCheck()
     }
@@ -42,8 +45,17 @@ class PrincipalViewModel @Inject constructor(
         pollingJob?.cancel()
         pollingJob = viewModelScope.launch {
             while (isActive) {
-                // El ViewModel ahora es un "coordinador", no un "trabajador"
                 val isAvailable = repository.isStreamAvailable()
+
+                // SI EL VIDEO NO ESTABA DISPONIBLE Y AHORA SÍ LO ESTÁ...
+                if (!wasVideoAvailable && isAvailable) {
+                    // ¡Hacemos parpadear el flash 3 veces!
+                    flashlightManager.blinkFlash(times = 3, delayMs = 250)
+                }
+
+                // Guardamos el estado para la próxima vuelta
+                wasVideoAvailable = isAvailable
+
                 _state.update { it.copy(isVideoAvailable = isAvailable) }
                 delay(10000)
             }

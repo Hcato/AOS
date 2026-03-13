@@ -3,6 +3,7 @@ package com.hcato.hakai.feature.video.presentation.viemodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hcato.hakai.core.hardware.OrientationSensor
+import com.hcato.hakai.core.hardware.VibrationManager
 import com.hcato.hakai.feature.video.data.datasource.remote.api.VideoRepository
 import com.hcato.hakai.feature.video.presentation.screens.VideoUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 class VideoViewModel @Inject constructor(
     private val repository: VideoRepository,
     private val orientationSensor: OrientationSensor,
+    private val vibrationManager: VibrationManager,
     @Named("androidId") private val androidId: String // Inyectado desde un módulo
 ) : ViewModel() {
 
@@ -62,6 +64,9 @@ class VideoViewModel @Inject constructor(
 
     fun sendLike(videoId: String) {
         if (_state.value.isLikeSending || _state.value.hasLiked) return
+
+        vibrationManager.playHeartbeat()
+
         viewModelScope.launch {
             _state.update { it.copy(isLikeSending = true) }
             val success = repository.sendLike(videoId, androidId)
