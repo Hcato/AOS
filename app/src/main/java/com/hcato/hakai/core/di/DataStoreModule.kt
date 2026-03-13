@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.hcato.hakai.feature.login.data.local.SessionRepositoryImpl
-import com.hcato.hakai.feature.login.domain.repositories.SessionRepository
+import com.hcato.hakai.feature.login.data.repositories.SessionRepositoryImpl
+
+// 👇 AQUÍ ESTÁ LA MAGIA: Importamos la interfaz del Core 👇
+import com.hcato.hakai.core.repositories.SessionRepository
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

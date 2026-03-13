@@ -1,6 +1,6 @@
 package com.hcato.hakai.core.network.interceptors
 
-import com.hcato.hakai.feature.login.domain.repositories.SessionRepository
+import com.hcato.hakai.core.repositories.SessionRepository
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

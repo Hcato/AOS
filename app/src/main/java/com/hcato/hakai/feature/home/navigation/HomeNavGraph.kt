@@ -8,11 +8,21 @@ import com.hcato.hakai.core.navigation.Home
 import com.hcato.hakai.core.navigation.Principal
 import com.hcato.hakai.feature.home.presentation.screens.HomeScreen
 
+import com.hcato.hakai.core.navigation.LoginRoute
+
 class HomeNavGraph: FeatureNavGraph {
     override fun registerGraph(navGraphBuilder: NavGraphBuilder, navController: NavHostController) {
         navGraphBuilder.composable<Home> {
             HomeScreen (
-                onClickPrincipal = { navController.navigate(Principal) }
+                onClickPrincipal = { navController.navigate(Principal) },
+
+                onNavigateToLogin = {
+                    navController.navigate(LoginRoute) {
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     }
