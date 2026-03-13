@@ -34,7 +34,7 @@ fun ActionButton(
             .fillMaxWidth()
             .height(52.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFFF6400),
+            containerColor = Color(0xFF00BCD4),
             disabledContainerColor = Color.DarkGray, // Color cuando no hay stream
             contentColor = Color.Black,
             disabledContentColor = Color.LightGray

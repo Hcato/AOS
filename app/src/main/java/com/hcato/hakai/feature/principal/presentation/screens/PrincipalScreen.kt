@@ -114,7 +114,7 @@ fun PrincipalScreen(
 
                 Text(
                     text = "Detalles de la serie",
-                    color = Color(0xFFFF6400),
+                    color = Color(0xFF00BCD4),
                     modifier = Modifier.padding(vertical = 16.dp).clickable { showDetails = true }
                 )
 
