@@ -1,5 +1,6 @@
 package com.hcato.hakai.feature.login.presentation.screens
 
+import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,13 +19,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.hcato.hakai.feature.login.presentation.components.AnimatedBorderTextField
 import com.hcato.hakai.feature.login.presentation.viewmodels.RegisterViewModel
+import com.hcato.hakai.feature.principal.presentation.components.LockScreenOrientation
 
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
     onNavigateBackToLogin: () -> Unit
 ) {
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
@@ -51,70 +55,50 @@ fun RegisterScreen(
             modifier = Modifier.padding(bottom = 64.dp)
         )
 
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text("Email", color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-            OutlinedTextField(
-                value = uiState.email,
-                onValueChange = viewModel::onEmailChanged,
-                singleLine = true,
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        // Email Field con borde animado
+        AnimatedBorderTextField(
+            value = uiState.email,
+            onValueChange = viewModel::onEmailChanged,
+            label = "Email",
+            placeholder = "ejemplo@correo.com"
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text("Password", color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-            OutlinedTextField(
-                value = uiState.password,
-                onValueChange = viewModel::onPasswordChanged,
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        // Password Field con borde animado
+        AnimatedBorderTextField(
+            value = uiState.password,
+            onValueChange = viewModel::onPasswordChanged,
+            label = "Password",
+            placeholder = "••••••••",
+            visualTransformation = PasswordVisualTransformation()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Confirm Password Field con borde animado
+        AnimatedBorderTextField(
+            value = uiState.confirmPassword,
+            onValueChange = viewModel::onConfirmPasswordChanged,
+            label = "Confirm Password",
+            placeholder = "••••••••",
+            visualTransformation = PasswordVisualTransformation()
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text("Confirm Password", color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-            OutlinedTextField(
-                value = uiState.confirmPassword,
-                onValueChange = viewModel::onConfirmPasswordChanged, // Llama a la nueva función
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(), // Oculta el texto también
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
+        // Reutilizamos también la lógica de gradiente en el botón si lo deseas,
+        // pero aquí mantengo tu estructura de botón oscuro para variar:
         Button(
             onClick = viewModel::register,
-            modifier = Modifier.fillMaxWidth().height(50.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF333333),
+                disabledContainerColor = Color.DarkGray
+            ),
             enabled = !uiState.isLoading
         ) {
             if (uiState.isLoading) {

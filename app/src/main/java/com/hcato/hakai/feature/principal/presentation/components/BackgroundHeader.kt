@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BackgroundHeader(resourceId: Int) {
-    Box(modifier = Modifier.fillMaxWidth().height(450.dp)) {
+    Box(modifier = Modifier.fillMaxWidth().height(525.dp)) {
         Image(
             painter = painterResource(id = resourceId),
             contentDescription = null,

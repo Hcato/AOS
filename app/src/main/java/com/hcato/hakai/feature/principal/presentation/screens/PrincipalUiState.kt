@@ -6,8 +6,8 @@ data class PrincipalUiState(
     val baseInfo: HomeUiState = HomeUiState(),
     val rating: Double = 4.9,
     val reviewsCount: String = "707K",
-    val nextEpisodeDate: String = "26/2",
+    val nextEpisodeDate: String = "18/3",
     val isFavorite: Boolean = false,
     val isVideoAvailable: Boolean = false,
-    val fullDescription: String = "JUJUTSU KAISEN es un manga con historia y dibujo de Gege Akutami que se publica en la Weekly Shonen Jump. Poco después de su debut se estrenaba la adaptación animada, producida por Studio MAPPA. Actualmente hay varias temporadas del anime, comenzando con la primera (24 episodios), siguiéndole la aclamada película precuela JUJUTSU KAISEN 0, y posteriormente la segunda temporada en julio de 2023. La historia sigue a Yuji Itadori, un estudiante con una fuerza física increíble que termina consumiendo una maldición milenaria para salvar a sus amigos."
+    val fullDescription: String = "Miku Hatsune conocida mayormente como Hatsune Miku o simplemente Miku, es una cantante virtual para el sintetizador desarrollado por Yamaha, VOCALOID2, VOCALOID3 y VOCALOID4, así como para el programa desarrollado por Crypton Future Media, Piapro Studio. Su imagen, de una chica de antropomorfismo moe de 16 años, llega a ser considerada y personificada como una de las más famosas idol virtuales japonesas a nivel mundial."
 )
