@@ -1,5 +1,6 @@
 package com.hcato.hakai.feature.login.presentation.screens
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +17,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.hcato.hakai.feature.login.presentation.components.AnimatedBorderTextField
 import com.hcato.hakai.feature.login.presentation.viewmodels.LoginViewModel
+import com.hcato.hakai.feature.principal.presentation.components.LockScreenOrientation
 
 @Composable
 fun LoginScreen(
@@ -24,6 +27,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     val uiState by viewModel.uiState.collectAsState()
 
     // Observar si el login fue exitoso para navegar
@@ -51,20 +55,11 @@ fun LoginScreen(
 
         // Email Field
         Column(modifier = Modifier.fillMaxWidth()) {
-            Text("Email", color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-            OutlinedTextField(
+            AnimatedBorderTextField(
                 value = uiState.email,
                 onValueChange = viewModel::onEmailChanged,
-                placeholder = { Text("Value", color = Color.Gray) },
-                singleLine = true,
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
+                label = "Email",
+                placeholder = "ejemplo@correo.com"
             )
         }
 
@@ -72,21 +67,12 @@ fun LoginScreen(
 
         // Password Field
         Column(modifier = Modifier.fillMaxWidth()) {
-            Text("Password", color = Color.White, modifier = Modifier.padding(bottom = 8.dp))
-            OutlinedTextField(
+            AnimatedBorderTextField(
                 value = uiState.password,
                 onValueChange = viewModel::onPasswordChanged,
-                placeholder = { Text("Value", color = Color.Gray) },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
+                label = "Password",
+                placeholder = "••••••••",
+                visualTransformation = PasswordVisualTransformation()
             )
         }
 

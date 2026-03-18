@@ -78,7 +78,7 @@ fun PrincipalScreen(
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
 
-            BackgroundHeader(R.drawable.background)
+            BackgroundHeader(R.drawable.mikuexpo2024)
 
             Column(
                 modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
@@ -89,12 +89,12 @@ fun PrincipalScreen(
                 Spacer(modifier = Modifier.height(200.dp))
 
                 Image(
-                    painter = painterResource(id = R.drawable.jujutsulogo),
+                    painter = painterResource(id = R.drawable.mikulogo),
                     contentDescription = null,
-                    modifier = Modifier.height(70.dp).padding(horizontal = 40.dp)
+                    modifier = Modifier.height(120.dp).padding(horizontal = 80.dp)
                 )
 
-                Text("THE CULLING GAME Part 1", color = Color.White, style = MaterialTheme.typography.labelSmall)
+                Text("THE CONCERT 360°", color = Color.White, style = MaterialTheme.typography.labelSmall)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -113,14 +113,14 @@ fun PrincipalScreen(
                 )
 
                 Text(
-                    text = "Detalles de la serie",
+                    text = "Detalles de la artista",
                     color = Color(0xFF00BCD4),
                     modifier = Modifier.padding(vertical = 16.dp).clickable { showDetails = true }
                 )
 
                 Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
-                    InfoColumn("Estudio", "MAPPA")
-                    InfoColumn("Audio", "Jap/Esp")
+                    InfoColumn("Estudio", "Yamaha")
+                    InfoColumn("Audio", "English")
                     InfoColumn("Clasif.", "16+")
                 }
 

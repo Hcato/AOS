@@ -123,7 +123,9 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.compose.ui.text)
-    implementation(libs.androidx.compose.foundation.layout)                    // Integración con Jetpack Compose
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.animation.core)
+    implementation(libs.androidx.runtime)                    // Integración con Jetpack Compose
     ksp(libs.hilt.compiler)                                         // KSP
     implementation("org.videolan.android:libvlc-all:3.6.0") //video
     implementation("io.socket:socket.io-client:2.1.0") //Socket

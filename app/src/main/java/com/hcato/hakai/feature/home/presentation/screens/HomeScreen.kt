@@ -126,7 +126,7 @@ fun HomeScreen(
             // 1. Capa de Arte (Fondo + Degradado)
             // IMPORTANTE: Para que la imagen quede detrás de la TopAppBar transparente,
             // no le aplicamos el innerPadding.calculateTopPadding() a esta Box principal.
-            HomeHeroSection(R.drawable.jujutsu)
+            HomeHeroSection(R.drawable.background3)
 
             // 2. Capa de Contenido
             Column(

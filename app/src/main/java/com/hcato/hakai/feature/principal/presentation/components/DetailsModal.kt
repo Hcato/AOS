@@ -16,7 +16,7 @@ fun DetailsModal(show: Boolean, description: String, onDismiss: () -> Unit) {
             text = { Text(text = description, color = Color.LightGray) },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
-                    Text("CERRAR", color = Color(0xFFFF6400))
+                    Text("CERRAR", color = Color(0xFF00BCD4))
                 }
             }
         )

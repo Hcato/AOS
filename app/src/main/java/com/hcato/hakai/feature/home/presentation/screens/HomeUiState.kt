@@ -1,10 +1,10 @@
 package com.hcato.hakai.feature.home.presentation.screens
 
 data class HomeUiState(
-    val title: String = "JUJUTSU KAISEN",
-    val description: String = "JUJUTSU KAISEN es un manga con historia y dibujo de Gege Akutami...",
-    val tags: String = "16+ Sub • Supernatural, Action, Drama, Fantasy, Shounen",
-    val releaseInfo: String = "Nuevos episodios los jueves a las 10:00 AM",
+    val title: String = "HATSUNE MIKU: VIRTUAL LIVE 360",
+    val description: String = "Sumérgete en una experiencia sensorial única con la idol virtual más famosa del mundo. Disfruta de un concierto inmersivo donde el escenario cobra vida gracias al giroscopio de tu dispositivo y la vibración rítmica.",
+    val tags: String = "Live • 360° Inmersive • Vocaloid • J-Pop • Electronic",
+    val releaseInfo: String = "Próximo show: Miércoles a las 1:00 PM (Hora Local)",
     val isLoading: Boolean = false,
     val error: String? = null,
     val userEmail: String = "Cargando...",

@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
             // Simulación de carga de datos
             _state.update {
                 it.copy(
-                    description = "JUJUTSU KAISEN es un manga con historia y dibujo de Gege Akutami que se publica en la Weekly Shonen Jump. Poco después de su debut se estrenaba la adaptación animada, producida por Studio MAPPA. Actualmente hay varias temporadas del anime, comenzando con la primera (24 episodios), siguiéndole la aclamada película precuela JUJUTSU KAISEN 0, y posteriormente la segunda temporada en julio de 2023.",
+                    description = "Sumérgete en una experiencia sensorial única con la idol virtual más famosa del mundo. Disfruta de un concierto inmersivo donde el escenario cobra vida gracias al giroscopio de tu dispositivo y la vibración rítmica.",
                     isLoading = false
                 )
             }
