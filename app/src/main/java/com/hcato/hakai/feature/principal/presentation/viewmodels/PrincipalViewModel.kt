@@ -1,7 +1,11 @@
 package com.hcato.hakai.feature.principal.presentation.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.hcato.hakai.BuildConfig
 import com.hcato.hakai.feature.principal.data.datasource.remote.api.PrincipalRepository
 import com.hcato.hakai.feature.principal.presentation.screens.PrincipalUiState
@@ -20,14 +24,44 @@ import org.videolan.libvlc.interfaces.IMedia.Meta.URL
 import java.net.HttpURLConnection
 import java.net.URL
 import com.hcato.hakai.core.hardware.FlashlightManager
+import com.hcato.hakai.core.network.interceptors.ReminderWorker
+import com.hcato.hakai.feature.principal.data.datasource.local.ReminderDao
+import com.hcato.hakai.feature.principal.data.datasource.local.ReminderEntity
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.concurrent.TimeUnit
+
 @HiltViewModel
 class PrincipalViewModel @Inject constructor(
     private val repository: PrincipalRepository,
-    private val flashlightManager: FlashlightManager
+    private val flashlightManager: FlashlightManager,
+    private val reminderDao: ReminderDao, // <-- INYECTAMOS EL DAO
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PrincipalUiState())
     val state = _state.asStateFlow()
+
+    fun setReminder(videoId: String, title: String) {
+        viewModelScope.launch {
+            // 1. Guardamos en Room (Base de datos local)
+            val timeToRing = System.currentTimeMillis() + 15000 // 15 segundos en el futuro (DEMO)
+            reminderDao.insertReminder(ReminderEntity(videoId, title, timeToRing))
+
+            // Actualizamos la UI
+            _state.update { it.copy(isFavorite = true) } // Usamos isFavorite como flag temporal de "Recordatorio activo"
+
+            // 2. Programamos el WorkManager
+            val inputData = Data.Builder().putString("TITLE", title).build()
+
+            val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+                .setInitialDelay(15, TimeUnit.SECONDS) // ¡ESPERA 15 SEGUNDOS!
+                .setInputData(inputData)
+                .build()
+
+            WorkManager.getInstance(context).enqueue(workRequest)
+        }
+    }
+
     private val streamUrl = BuildConfig.BASE_URL_STREAMING
 
     fun toggleFavorite() {

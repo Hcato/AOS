@@ -102,6 +102,18 @@ fun PrincipalScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                TextButton(
+                    onClick = { viewModel.setReminder("video_miku_01", "Miku Expo 2024") },
+                    enabled = !uiState.isFavorite // Lo deshabilitamos si ya lo presionó
+                ) {
+                    Text(
+                        text = if (uiState.isFavorite) "✅ Recordatorio Activo" else "🔔 Recordarme",
+                        color = if (uiState.isFavorite) Color.Green else Color(0xFFFF6400),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
                 SeriesMetadata(uiState.rating, uiState.reviewsCount, base.tags)
 
                 Text(

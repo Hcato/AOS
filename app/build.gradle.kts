@@ -129,6 +129,14 @@ dependencies {
     ksp(libs.hilt.compiler)                                         // KSP
     implementation("org.videolan.android:libvlc-all:3.6.0") //video
     implementation("io.socket:socket.io-client:2.1.0") //Socket
+
+
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.compose.runtime)
