@@ -34,13 +34,17 @@ class RegisterViewModel @Inject constructor(
     fun register() {
         val currentState = _uiState.value
 
-        // 1. Validación local de contraseñas
-        if (currentState.password != currentState.confirmPassword) {
-            _uiState.update { it.copy(errorMessage = "Las contraseñas no coinciden") }
-            return // Detenemos la ejecución aquí, no llamamos a la API
+        // 1. Validaciones locales
+        if (currentState.email.isBlank() || currentState.password.isBlank()) {
+            _uiState.update { it.copy(errorMessage = "Completa todos los campos") }
+            return
         }
 
-        // 2. Si coinciden, continuamos con el registro
+        if (currentState.password != currentState.confirmPassword) {
+            _uiState.update { it.copy(errorMessage = "Las contraseñas no coinciden") }
+            return
+        }
+
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
         viewModelScope.launch {
@@ -49,9 +53,21 @@ class RegisterViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = false, isSuccess = true, successMessage = mensaje) }
             }.onFailure { error ->
                 _uiState.update {
-                    it.copy(isLoading = false, errorMessage = error.message ?: "Error al registrar")
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = mapFirebaseRegisterError(error)
+                    )
                 }
             }
+        }
+    }
+
+    private fun mapFirebaseRegisterError(error: Throwable): String {
+        return when (error) {
+            is com.google.firebase.auth.FirebaseAuthUserCollisionException -> "Este correo ya está registrado."
+            is com.google.firebase.auth.FirebaseAuthWeakPasswordException -> "La contraseña es muy débil (mínimo 6 caracteres)."
+            is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException -> "El formato del correo es inválido."
+            else -> error.message ?: "Error al crear la cuenta"
         }
     }
 }

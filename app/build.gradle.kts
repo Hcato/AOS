@@ -1,6 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.secrets.gradle)
@@ -93,6 +95,7 @@ secrets {
     ignoreList.add("sdk.dir")
 }
 dependencies {
+    // AndroidX & Compose Base
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -101,45 +104,58 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)   //viewModel()
-    implementation(libs.com.squareup.retrofit2.retrofit)        // Retrofit
-    implementation("com.squareup.retrofit2:converter-gson:3.0.0")  // JSON
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-
-    implementation("androidx.media3:media3-exoplayer:1.2.0")
-    implementation("androidx.media3:media3-ui:1.2.0")
-
-    implementation("androidx.media3:media3-exoplayer-hls:1.2.0")
-
-    implementation(libs.io.coil.kt.coil.compose)
-    implementation(libs.androidx.navigation.compose)// Navigation
-    implementation("io.github.sceneview:sceneview:2.2.1") //SceneView 3D
-    implementation("androidx.media:media:1.7.0") //TTS Voice
-    implementation("com.google.mlkit:translate:17.0.2") //Translate
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
-    implementation("androidx.datastore:datastore-preferences:1.1.1") //DataStore
-    implementation(libs.hilt.android)                               // Implementación de Hilt
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.animation.core)
-    implementation(libs.androidx.runtime)                    // Integración con Jetpack Compose
-    ksp(libs.hilt.compiler)                                         // KSP
-    implementation("org.videolan.android:libvlc-all:3.6.0") //video
-    implementation("io.socket:socket.io-client:2.1.0") //Socket
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.compose.runtime)
 
+    // Retrofit & Network
+    implementation(libs.com.squareup.retrofit2.retrofit)
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("io.socket:socket.io-client:2.1.0")
 
+    // Media & Video
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-ui:1.2.0")
+    implementation("androidx.media3:media3-exoplayer-hls:1.2.0")
+    implementation("org.videolan.android:libvlc-all:3.6.0")
+    implementation("androidx.media:media:1.7.0")
+
+    // --- FIREBASE (Única sección, sin duplicados y sin -ktx) ---
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    // Hilt (Inyección de dependencias)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+
+    // Room (Base de Datos)
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
 
+    // Navigation & DataStore
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.compose.runtime)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Utils & Workers
+    implementation(libs.io.coil.kt.coil.compose)
+    implementation("io.github.sceneview:sceneview:2.2.1")
+    implementation("com.google.mlkit:translate:17.0.2")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

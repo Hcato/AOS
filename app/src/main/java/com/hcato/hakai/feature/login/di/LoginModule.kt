@@ -16,6 +16,9 @@ object LoginModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(api: AuthApi): LoginRepository =
-        AuthRepositoryImpl(api)
+    fun provideAuthRepository(
+        api: AuthApi,
+        firebaseAuth: com.google.firebase.auth.FirebaseAuth // Hilt inyectará esto automáticamente
+    ): LoginRepository =
+        AuthRepositoryImpl(api, firebaseAuth) // Ahora pasamos ambos parámetros
 }

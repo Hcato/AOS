@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SessionRepositoryImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val firebaseAuth: com.google.firebase.auth.FirebaseAuth
 ) : SessionRepository {
 
     // Definimos las "llaves" para guardar nuestros datos
@@ -37,6 +38,10 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearSession() {
+        // 1. CERRAMOS SESIÓN EN FIREBASE (Lo más importante)
+        firebaseAuth.signOut()
+
+        // 2. Limpiamos el DataStore local
         dataStore.edit { preferences ->
             preferences.remove(tokenKey)
             preferences.remove(emailKey)

@@ -31,7 +31,11 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideSessionRepository(dataStore: DataStore<Preferences>): SessionRepository {
-        return SessionRepositoryImpl(dataStore)
+    fun provideSessionRepository(
+        dataStore: DataStore<Preferences>,
+        firebaseAuth: com.google.firebase.auth.FirebaseAuth // <-- Hilt lo sacará de tu FirebaseModule
+    ): SessionRepository {
+        // Ahora le pasamos ambos juguetes al constructor
+        return SessionRepositoryImpl(dataStore, firebaseAuth)
     }
 }

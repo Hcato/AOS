@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinSerialization) apply false    // Serialization
     alias(libs.plugins.hilt.android) apply false                    // Hilt
     alias(libs.plugins.devtools.ksp) apply false                    // KSP
+    id("com.google.gms.google-services") version "4.4.4" apply false// FCM
 }

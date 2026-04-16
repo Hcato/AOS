@@ -14,12 +14,19 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val sessionRepository: SessionRepository
+    private val sessionRepository: SessionRepository,
+    private val firebaseAuth: com.google.firebase.auth.FirebaseAuth
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        // Auto-login: Si ya hay un usuario en Firebase, saltamos el login
+        if (firebaseAuth.currentUser != null) {
+            _uiState.update { it.copy(isSuccess = true) }
+        }
+    }
     fun onEmailChanged(email: String) {
         _uiState.update { it.copy(email = email, errorMessage = null) }
     }
@@ -30,23 +37,39 @@ class LoginViewModel @Inject constructor(
 
     fun login() {
         val currentState = _uiState.value
+        if (currentState.email.isBlank() || currentState.password.isBlank()) {
+            _uiState.update { it.copy(errorMessage = "Por favor, llena todos los campos") }
+            return
+        }
+
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
         viewModelScope.launch {
             val result = loginUseCase(currentState.email, currentState.password)
             result.onSuccess { token ->
-                // Guardamos el token que viene de la API y el correo que el usuario escribió
+                // Guardamos el token de Firebase y el email en DataStore
                 sessionRepository.saveSession(
                     token = token.accessToken,
                     email = currentState.email
                 )
-
                 _uiState.update { it.copy(isLoading = false, isSuccess = true) }
             }.onFailure { error ->
                 _uiState.update {
-                    it.copy(isLoading = false, errorMessage = error.message ?: "Error desconocido")
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = mapFirebaseError(error) // Mapeo de errores amigables
+                    )
                 }
             }
+        }
+    }
+
+    // Función auxiliar para que el usuario entienda qué pasó
+    private fun mapFirebaseError(error: Throwable): String {
+        return when (error) {
+            is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException -> "Contraseña incorrecta o correo mal escrito."
+            is com.google.firebase.auth.FirebaseAuthInvalidUserException -> "Este usuario no existe."
+            else -> error.message ?: "Error de conexión"
         }
     }
 }
