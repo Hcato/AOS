@@ -1,11 +1,14 @@
 package com.hcato.hakai.feature.principal.presentation.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.hcato.hakai.BuildConfig
 import com.hcato.hakai.feature.principal.data.datasource.remote.api.PrincipalRepository
 import com.hcato.hakai.feature.principal.presentation.screens.PrincipalUiState
@@ -100,5 +103,24 @@ class PrincipalViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         pollingJob?.cancel() // Limpieza final
+    }
+
+    init {
+        // 1. Suscribirse al tema de Firebase para notificaciones push
+        subscribeToLiveNotifications()
+
+        // 2. Iniciar el chequeo de streaming que ya tenías
+        startStreamingCheck()
+    }
+
+    private fun subscribeToLiveNotifications() {
+        Firebase.messaging.subscribeToTopic("estrenos_en_vivo")
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("HAKAI_FCM", "Suscrito con éxito al tema: estrenos_en_vivo")
+                } else {
+                    Log.e("HAKAI_FCM", "Error al suscribirse", task.exception)
+                }
+            }
     }
 }
