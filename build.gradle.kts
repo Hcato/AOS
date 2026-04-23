@@ -7,4 +7,5 @@ plugins {
     alias(libs.plugins.hilt.android) apply false                    // Hilt
     alias(libs.plugins.devtools.ksp) apply false                    // KSP
     id("com.google.gms.google-services") version "4.4.4" apply false// FCM
+    id("com.google.firebase.crashlytics") version "3.0.7" apply false //Crashlytics
 }

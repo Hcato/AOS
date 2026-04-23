@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -33,8 +34,22 @@ class OrientationSensorImpl @Inject constructor(
     private val orientationAngles = FloatArray(3)
 
     override fun startListening() {
-        rotationSensor?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
+        val crashlytics = FirebaseCrashlytics.getInstance()
+
+        if (rotationSensor == null) {
+            // Reportamos que este dispositivo no tiene el sensor necesario para el 360
+            crashlytics.log("HW_ERROR: Sensor GAME_ROTATION_VECTOR no disponible")
+            crashlytics.setCustomKey("sensor_360_disponible", false)
+            return
+        }
+
+        val supported = sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_GAME)
+
+        if (!supported) {
+            crashlytics.log("HW_ERROR: Fallo al registrar listener de rotación")
+            crashlytics.setCustomKey("sensor_registration_status", "failed")
+        } else {
+            crashlytics.setCustomKey("sensor_360_disponible", true)
         }
     }
 

@@ -1,6 +1,7 @@
 package com.hcato.hakai.feature.login.data.repositories
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hcato.hakai.feature.login.data.datasource.remote.api.AuthApi
 import com.hcato.hakai.feature.login.data.datasource.remote.api.RegisterRequest
 import com.hcato.hakai.feature.login.domain.entities.AuthToken
@@ -21,7 +22,10 @@ class AuthRepositoryImpl @Inject constructor(
             Result.success(AuthToken(token, "Bearer"))
 
         } catch (e: Exception) {
-            // Aquí puedes manejar excepciones específicas de Retrofit (HttpException)
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.setCustomKey("auth_method", "email_password")
+            crashlytics.log("Fallo en el intento de Login para el email: $email")
+            crashlytics.recordException(e) // Enviamos el error completo
             Result.failure(e)
         }
     }
@@ -38,7 +42,9 @@ class AuthRepositoryImpl @Inject constructor(
             try {
                 api.register(RegisterRequest(email, password))
             } catch (apiException: Exception) {
-                // Logueamos el error pero no lo lanzamos, porque Firebase YA lo creó
+                val crashlytics = FirebaseCrashlytics.getInstance()
+                crashlytics.log("ERROR SINCRONIZACIÓN: Firebase OK, pero FastAPI falló en registro")
+                crashlytics.recordException(apiException)
                 println("Error al sincronizar con FastAPI: ${apiException.message}")
             }
 

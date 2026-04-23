@@ -45,10 +45,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.video.spherical.SphericalGLSurfaceView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hcato.hakai.feature.video.presentation.components.LiveBadge
 import com.hcato.hakai.feature.video.presentation.components.LockScreenOrientation
 import com.hcato.hakai.feature.video.presentation.components.VideoLoadingScreen
@@ -97,6 +99,10 @@ fun VideoScreen(
                     viewModel.onVideoPlaying()
                 }
             }
+            override fun onPlayerError(error: PlaybackException) {
+                FirebaseCrashlytics.getInstance().recordException(error)
+                FirebaseCrashlytics.getInstance().log("Error cargando video: ${error.errorCodeName}")
+            }
         }
         player.addListener(listener)
 
@@ -108,7 +114,9 @@ fun VideoScreen(
     }
 
     // 6. Layout Final con Overlays
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)) {
 
         // --- LA MAGIA: Conectando el hardware (Giroscopio) ---
         val lifecycleOwner = LocalLifecycleOwner.current

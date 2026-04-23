@@ -1,5 +1,6 @@
 package com.hcato.hakai.core.repositories
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hcato.hakai.feature.principal.data.datasource.remote.api.StreamingApi
 import com.hcato.hakai.feature.principal.data.model.LikeRequest
 import com.hcato.hakai.feature.video.data.datasource.remote.api.VideoRepository
@@ -58,8 +59,10 @@ class VideoRepositoryImpl @Inject constructor(
             val response = apiService.darLike(videoId, LikeRequest(androidId))
             response.success
         } catch (e: Exception) {
-            false
-        }
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.setCustomKey("ultimo_videoId_interaccion", videoId)
+            crashlytics.recordException(e)
+        } as Boolean
     }
 
     override suspend fun getInitialLikes(videoId: String): Int {
